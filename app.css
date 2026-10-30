@@ -1,0 +1,27 @@
+:root{--az:#0A2E6E;--a2:#1553B8;--am:#FFC72C;--tx:#0F1B33;--bg:#F2F5FB;--ln:#D3DCEE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Segoe UI",Roboto,system-ui,sans-serif}
+h1{font-size:26px;margin:8px 0 14px;color:var(--az)}h2{font-size:18px;margin:18px 0 8px;color:var(--a2)}
+.topo{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--az);color:#fff;border-bottom:5px solid var(--am)}
+.topo span{margin-left:auto;font-size:14px}
+.logo{font-size:22px;font-weight:800}.logo b{margin-right:6px;padding:0 8px;border-radius:6px;background:var(--am);color:var(--az)}.big{font-size:36px;text-align:center}
+button{min-height:46px;padding:10px 16px;border:0;border-radius:10px;background:var(--a2);color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer}
+button.am{background:var(--am);color:var(--az)}button.cl{background:#fff;color:var(--a2);border:1px solid var(--a2)}button:disabled{opacity:.35;cursor:not-allowed}
+input,select,textarea{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;background:#fff;color:inherit;font:inherit}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+label{display:block;margin:0 0 10px;font-size:14px;font-weight:600}label input,label select,label textarea{margin-top:4px;font-weight:400}
+nav{position:fixed;z-index:5;bottom:0;left:0;right:0;display:flex;background:var(--az);border-top:3px solid var(--am)}
+nav button{flex:1;min-height:58px;padding:6px 2px;border-radius:0;background:none;color:#BFD3F7;font-size:12px}nav button i{display:block;font-size:20px;font-style:normal}nav button.on{background:var(--a2);color:#fff}
+#pg{max-width:900px;margin:auto;padding:14px 14px 90px}
+.cd{margin-bottom:12px;padding:14px;border:1px solid var(--ln);border-radius:12px;background:#fff}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}.gr .cd{margin:0}.bp{margin:12px 0 0}.bp button{min-height:64px}
+.n{font-size:36px;font-weight:800;line-height:1.1;color:var(--a2)}
+.lh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ac{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.ac button{flex:1}
+.bd{padding:2px 10px;border-radius:99px;background:#E3EBFA;color:var(--az);font-size:13px;font-weight:700;white-space:nowrap}
+.APROVADO,.CONCLUIDA,.EMITIDA{background:#DCF3E6;color:#0B7A45}.REPROVADO,.CANCELADA{background:#FBE1E1;color:#B3201F}.PENDENTE,.EM_ANDAMENTO{background:#FFF0BD;color:#765500}
+small,.vz{color:#5A6785}.pb,.er{color:#B3201F;font-size:14px}
+.ck{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:16px;font-weight:400}.ck input{width:26px;min-height:26px;margin:0}
+.tt{position:fixed;z-index:9;left:50%;bottom:78px;transform:translateX(-50%);padding:12px 18px;border-left:6px solid var(--am);border-radius:10px;background:var(--az);color:#fff;box-shadow:0 4px 14px #0004}.tt.er{background:#B3201F;color:#fff}
+body.lg{background:var(--az)}.lgc{max-width:380px;margin:12vh auto 0;border-top:6px solid var(--am)}.lgc .logo{color:var(--az)}.lgc button{width:100%}
+@media(min-width:860px){nav{top:72px;right:auto;bottom:0;width:190px;flex-direction:column;justify-content:flex-start;border-top:0;border-right:3px solid var(--am)}nav button{flex:none;min-height:56px;padding:10px 18px;font-size:16px;text-align:left}nav button i{display:inline;margin-right:10px}#pg{max-width:none;margin:0 0 0 210px;padding:20px 24px 30px}.tt{bottom:24px}}

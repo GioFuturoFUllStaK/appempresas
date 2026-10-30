@@ -1,0 +1,127 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>LOG empresas (demonstração)</title><style>:root{--az:#0A2E6E;--a2:#1553B8;--am:#FFC72C;--tx:#0F1B33;--bg:#F2F5FB;--ln:#D3DCEE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Segoe UI",Roboto,system-ui,sans-serif}
+h1{font-size:26px;margin:8px 0 14px;color:var(--az)}h2{font-size:18px;margin:18px 0 8px;color:var(--a2)}
+.topo{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--az);color:#fff;border-bottom:5px solid var(--am)}
+.topo span{margin-left:auto;font-size:14px}
+.logo{font-size:22px;font-weight:800}.logo b{margin-right:6px;padding:0 8px;border-radius:6px;background:var(--am);color:var(--az)}.big{font-size:36px;text-align:center}
+button{min-height:46px;padding:10px 16px;border:0;border-radius:10px;background:var(--a2);color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer}
+button.am{background:var(--am);color:var(--az)}button.cl{background:#fff;color:var(--a2);border:1px solid var(--a2)}button:disabled{opacity:.35;cursor:not-allowed}
+input,select,textarea{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;background:#fff;color:inherit;font:inherit}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+label{display:block;margin:0 0 10px;font-size:14px;font-weight:600}label input,label select,label textarea{margin-top:4px;font-weight:400}
+nav{position:fixed;z-index:5;bottom:0;left:0;right:0;display:flex;background:var(--az);border-top:3px solid var(--am)}
+nav button{flex:1;min-height:58px;padding:6px 2px;border-radius:0;background:none;color:#BFD3F7;font-size:12px}nav button i{display:block;font-size:20px;font-style:normal}nav button.on{background:var(--a2);color:#fff}
+#pg{max-width:900px;margin:auto;padding:14px 14px 90px}
+.cd{margin-bottom:12px;padding:14px;border:1px solid var(--ln);border-radius:12px;background:#fff}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}.gr .cd{margin:0}.bp{margin:12px 0 0}.bp button{min-height:64px}
+.n{font-size:36px;font-weight:800;line-height:1.1;color:var(--a2)}
+.lh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ac{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.ac button{flex:1}
+.bd{padding:2px 10px;border-radius:99px;background:#E3EBFA;color:var(--az);font-size:13px;font-weight:700;white-space:nowrap}
+.APROVADO,.CONCLUIDA,.EMITIDA{background:#DCF3E6;color:#0B7A45}.REPROVADO,.CANCELADA{background:#FBE1E1;color:#B3201F}.PENDENTE,.EM_ANDAMENTO{background:#FFF0BD;color:#765500}
+small,.vz{color:#5A6785}.pb,.er{color:#B3201F;font-size:14px}
+.ck{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:16px;font-weight:400}.ck input{width:26px;min-height:26px;margin:0}
+.tt{position:fixed;z-index:9;left:50%;bottom:78px;transform:translateX(-50%);padding:12px 18px;border-left:6px solid var(--am);border-radius:10px;background:var(--az);color:#fff;box-shadow:0 4px 14px #0004}.tt.er{background:#B3201F;color:#fff}
+body.lg{background:var(--az)}.lgc{max-width:380px;margin:12vh auto 0;border-top:6px solid var(--am)}.lgc .logo{color:var(--az)}.lgc button{width:100%}
+@media(min-width:860px){nav{top:72px;right:auto;bottom:0;width:190px;flex-direction:column;justify-content:flex-start;border-top:0;border-right:3px solid var(--am)}nav button{flex:none;min-height:56px;padding:10px 18px;font-size:16px;text-align:left}nav button i{display:inline;margin-right:10px}#pg{max-width:none;margin:0 0 0 210px;padding:20px 24px 30px}.tt{bottom:24px}}
+.demo{padding:6px 10px;background:#FFC72C;color:#0A2E6E;font-size:13px;font-weight:600;text-align:center}nav{padding-bottom:env(safe-area-inset-bottom,0px)}.topo{top:env(safe-area-inset-top,0px)}:root{padding-top:env(safe-area-inset-top,0px)}</style></head><body><script>(()=>{
+const U={admin:['Admin@2026','ADMIN'],motorista:['Motor@2026','MOTORISTA']};
+let S=null,seq=0,DB={cargas:[],notas:[],checklists:[],pontos:[]};
+try{const x=JSON.parse(localStorage.getItem('logdemo'));if(x){DB=x[0];seq=x[1]}}catch{}
+const sv=()=>{try{localStorage.setItem('logdemo',JSON.stringify([DB,seq]))}catch{}};
+const EN={operacao:['CARGA','DESCARGA'],produto:['CAVACO','BAGACO','SERRAGEM','CASCA','OUTRO'],tipo:['ENTRADA','INI_INTERVALO','FIM_INTERVALO','SAIDA']};
+const F={cargas:['operacao','produto','placa','carreta','motorista','origem','destino','peso'],notas:['carga','cliente','produto','peso'],checklists:['placa','carreta','motorista','itens','obs'],pontos:['tipo']};
+const er=m=>{throw m};
+function val(c,v){v=String(v||'').replace(/[\x00-\x1f]/g,' ').trim();
+ if(!v){if(c==='obs')return'';er('Preencha o campo '+c+'.')}
+ if(v.length>(c==='obs'?200:60))er('Texto longo demais em '+c+'.');
+ if(EN[c]&&!EN[c].includes(v))er('Valor inválido em '+c+'.');
+ if(c==='placa'||c==='carreta'){v=v.toUpperCase().replace('-','');if(!/^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(v))er('Placa inválida em '+c+' (modelo ABC1D23).')}
+ if(c==='peso'){v=v.replace(',','.');const n=parseFloat(v);if(!/^\d{1,2}(\.\d{1,3})?$/.test(v)||n<=0||n>60)er('O peso deve ficar entre 0,1 e 60 toneladas.')}
+ if(c==='itens'&&!/^[01]{12}$/.test(v))er('Responda os 12 itens do checklist.');
+ return v}
+const now=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,19).replace('T',' ');
+function rota(m,p,f){
+ if(p==='login'){const n=(f.u||'').trim().toLowerCase(),u=U[n];if(!u||u[0]!==(f.s||'').trim())return[401,{erro:'Usuário ou senha incorretos.'}];S={nome:n,perfil:u[1]};return[200,S]}
+ if(!S)return[401,{erro:'Sessão expirada. Entre novamente.'}];
+ if(p==='sair'){S=null;return[200,{}]}
+ if(p==='eu')return[200,S];
+ const r=p.split('/'),l=DB[r[0]];
+ if(!l||(r.length!==1&&r.length!==3)||(m==='GET'&&r.length!==1))return[404,{erro:'Não encontrado.'}];
+ if(m==='GET')return[200,l.filter(d=>r[0]!=='pontos'||S.perfil==='ADMIN'||d.usuario===S.nome).reverse().slice(0,200)];
+ if(r.length===3){const ok={cargas:['AGENDADA','EM_ANDAMENTO','CONCLUIDA','CANCELADA'],notas:['PENDENTE','EMITIDA','CANCELADA']}[r[0]]||[];
+  if(!ok.includes(r[2]))er('Status inválido.');
+  if(r[0]==='notas'&&S.perfil!=='ADMIN')er('Somente o administrador altera notas.');
+  const d=l.find(x=>x.id===r[1]);if(!d)er('Registro não encontrado.');d.status=r[2];sv();return[200,d]}
+ const d={};F[r[0]].forEach(c=>d[c]=val(c,f[c]));
+ if(r[0]==='cargas')d.status='AGENDADA';
+ if(r[0]==='notas'){if(!DB.cargas.some(k=>k.id===d.carga))er('Carga não encontrada.');d.status='PENDENTE'}
+ if(r[0]==='checklists')d.status=d.itens.includes('0')?'REPROVADO':'APROVADO';
+ if(r[0]==='pontos'){const q=[...l].reverse().find(z=>z.usuario===S.nome),ok={ENTRADA:['INI_INTERVALO','SAIDA'],INI_INTERVALO:['FIM_INTERVALO'],FIM_INTERVALO:['SAIDA']}[q?q.tipo:'']||['ENTRADA'];
+  if(!ok.includes(d.tipo))er('Registro fora de sequência. Confira o último ponto.')}
+ d.id=String(++seq);d.usuario=S.nome;d.criado=now();l.push(d);sv();return[201,d]}
+const f0=window.fetch.bind(window);
+window.fetch=async(u,o={})=>{if(!String(u).startsWith('/api/'))return f0(u,o);
+ const m=o.method||'GET',f=o.body?Object.fromEntries(new URLSearchParams(o.body)):{};
+ let c,d;try{[c,d]=rota(m,String(u).slice(5),f)}catch(e){c=400;d={erro:String(e)}}
+ return{status:c,ok:c<400,json:async()=>d}};
+document.body.insertAdjacentHTML('afterbegin','<div class="demo">Demonstração no navegador, sem servidor. Entre com admin / Admin@2026 ou motorista / Motor@2026.</div>');
+})();
+</script><div id="app"></div><script>'use strict';
+// LOG empresas © Todos os direitos reservados. Código próprio, sem bibliotecas externas.
+const $=s=>document.querySelector(s),
+E=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';'),
+PR={CAVACO:'Cavaco',BAGACO:'Bagaço',SERRAGEM:'Serragem',CASCA:'Casca',OUTRO:'Outro'},
+L={...PR,CARGA:'Carga',DESCARGA:'Descarga',AGENDADA:'Agendada',EM_ANDAMENTO:'Em andamento',CONCLUIDA:'Concluída',CANCELADA:'Cancelada',PENDENTE:'Pendente',EMITIDA:'Emitida',APROVADO:'Aprovado',REPROVADO:'Reprovado',ENTRADA:'Entrada',INI_INTERVALO:'Início do intervalo',FIM_INTERVALO:'Fim do intervalo',SAIDA:'Saída'},
+lb=k=>L[k]||E(k),kg=p=>E(p).replace('.',','),dt=s=>s.slice(8,10)+'/'+s.slice(5,7)+' '+s.slice(11,16),
+IT=['Freios e pressão de ar','Pneus e estepe','Luzes e setas','Óleo, água e vazamentos','Documentos (CNH, CRLV, ANTT)','Extintor e triângulo','Piso móvel e cilindros hidráulicos','Mangueiras sem vazamento','Portas e travas traseiras','Lona ou cobertura da carga','Quinta roda, engate e suspensão','Placas e faixas refletivas'],
+TABS=[['painel','📊','Painel'],['cargas','🚛','Cargas'],['notas','🧾','Notas'],['check','✅','Checklist'],['ponto','⏱️','Ponto']],
+NX={AGENDADA:['EM_ANDAMENTO','Iniciar'],EM_ANDAMENTO:['CONCLUIDA','Concluir']},
+NP={'':['ENTRADA'],ENTRADA:['INI_INTERVALO','SAIDA'],INI_INTERVALO:['FIM_INTERVALO'],FIM_INTERVALO:['SAIDA'],SAIDA:['ENTRADA']},
+PL='ABC1D23',V={},B={};
+let U,D={},T='painel';
+async function api(p,d){
+ const r=await fetch('/api/'+p,d?{method:'POST',headers:{'X-LOG':'1','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(d)}:{}),j=await r.json().catch(()=>({}));
+ if(r.status===401&&p!=='login'){U=null;entrar('Sessão expirada. Entre novamente.');throw Error('Sessão expirada.')}
+ if(!r.ok)throw Error(j.erro||'Falha na operação.');
+ return j}
+function msg(m,er){const e=document.createElement('div');e.className='tt'+(er?' er':'');e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),3500)}
+const I=(n,t,p='',x='')=>`<label>${t}<input name="${n}" placeholder="${p}" maxlength="60" required ${x}></label>`,
+S=(n,t,o)=>`<label>${t}<select name="${n}">${Object.entries(o).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>`,
+BD=s=>`<span class="bd ${s}">${lb(s)}</span>`,
+VZ=x=>`<p class="vz">${x}</p>`,
+env=(col,ex)=>async e=>{e.preventDefault();try{await api(col,{...Object.fromEntries(new FormData(e.target)),...(ex?ex(e.target):{})});msg('Salvo com sucesso.');ir(T)}catch(x){msg(x.message,1)}},
+BS=()=>document.querySelectorAll('[data-s]').forEach(b=>b.onclick=async()=>{try{await api(b.dataset.s,{});msg('Status atualizado.');ir(T)}catch(e){msg(e.message,1)}}),
+CK=x=>`<label class="ck"><input type="checkbox" class="it"><span>${x}</span></label>`,
+CG=c=>{const n=NX[c.status];return `<div class="cd"><div class="lh"><b>#${c.id} ${lb(c.operacao)} de ${lb(c.produto)}</b>${BD(c.status)}</div><div>${E(c.placa)} + ${E(c.carreta)} · ${E(c.motorista)}</div><div>${E(c.origem)} → ${E(c.destino)} · ${kg(c.peso)} t</div><small>${dt(c.criado)}</small>${n?`<div class="ac"><button data-s="cargas/${c.id}/${n[0]}">${n[1]}</button>${c.status==='AGENDADA'?`<button class="cl" data-s="cargas/${c.id}/CANCELADA">Cancelar</button>`:''}</div>`:''}</div>`};
+function entrar(m){document.body.className='lg';
+ $('#app').innerHTML=`<form class="cd lgc" id="f"><div class="logo big"><b>LOG</b>empresas</div>${VZ('Cargas, notas, checklists e ponto da operação de piso móvel.')}${I('u','Usuário','','autocomplete="off" autofocus')}<label>Senha<input name="s" type="password" required autocomplete="new-password"></label><p class="er" id="er">${E(m||'')}</p><button class="am">Entrar</button></form>`;
+ $('#f').onsubmit=async e=>{e.preventDefault();try{U=await api('login',Object.fromEntries(new FormData(e.target)));inicio()}catch(x){$('#er').textContent=x.message}}}
+async function inicio(){
+ try{U=U||await api('eu')}catch{return entrar()}
+ document.body.className='';
+ $('#app').innerHTML=`<header class="topo"><div class="logo"><b>LOG</b>empresas</div><span>${E(U.nome)}</span><button class="cl" id="sair">Sair</button></header><nav>${TABS.map(([k,i,n])=>`<button data-t="${k}"><i>${i}</i>${n}</button>`).join('')}</nav><main id="pg"></main>`;
+ $('#sair').onclick=async()=>{await api('sair',{});U=null;entrar()};
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>ir(b.dataset.t));
+ ir(T)}
+async function ir(t){T=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+ try{for(const c of['cargas','notas','checklists','pontos'])D[c]=await api(c)}catch(e){return msg(e.message,1)}
+ $('#pg').innerHTML=V[t]();B[t]()}
+V.painel=()=>{const c=D.cargas,ab=c.filter(x=>NX[x.status]).length,tn=c.filter(x=>x.status==='CONCLUIDA').reduce((s,x)=>s+parseFloat(x.peso),0),
+ k=(n,x)=>`<div class="cd"><div class="n">${n}</div>${x}</div>`;
+ return `<h1>Olá, ${E(U.nome)}</h1><div class="gr">${k(ab,'Cargas em aberto')}${k(D.notas.filter(x=>x.status==='PENDENTE').length,'Notas pendentes')}${k(D.checklists.filter(x=>x.status==='REPROVADO').length,'Checklists reprovados')}${k(tn.toFixed(1).replace('.',','),'Toneladas concluídas')}</div><div class="ac"><button class="am" data-g="cargas">Nova carga ou descarga</button><button data-g="check">Fazer checklist</button><button data-g="ponto">Registrar ponto</button></div><h2>Últimas cargas</h2>${c.slice(0,5).map(CG).join('')||VZ('Nenhuma carga ainda. Toque em “Nova carga ou descarga”.')}`};
+B.painel=()=>{document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>ir(b.dataset.g));BS()};
+V.cargas=()=>`<h1>Cargas e descargas</h1><form class="cd" id="f"><h2>Nova operação</h2>${S('operacao','Operação',{CARGA:'Carga',DESCARGA:'Descarga'})}${S('produto','Produto',PR)}${I('placa','Placa do caminhão',PL)}${I('carreta','Placa da carreta (piso móvel)',PL)}${I('motorista','Motorista')}${I('origem','Origem','Ex.: Fazenda Boa Vista')}${I('destino','Destino','Ex.: Usina ou caldeira')}${I('peso','Peso (toneladas)','Ex.: 24,5','inputmode="decimal"')}<button class="am">Salvar operação</button></form><h2>Registradas</h2>${D.cargas.map(CG).join('')||VZ('Nenhuma operação registrada.')}`;
+B.cargas=()=>{$('#f').onsubmit=env('cargas');BS()};
+V.notas=()=>{const op=D.cargas.filter(c=>c.status!=='CANCELADA');
+ return `<h1>Solicitação de nota fiscal</h1><form class="cd" id="f"><h2>Solicitar nota</h2><label>Carga<select name="carga">${op.map(c=>`<option value="${c.id}" data-p="${E(c.produto)}" data-w="${E(c.peso)}">#${c.id} · ${lb(c.produto)} · ${E(c.placa)} → ${E(c.destino)}</option>`).join('')}</select></label>${I('cliente','Cliente ou destinatário')}<button class="am" ${op.length?'':'disabled'}>Solicitar nota</button>${op.length?'':VZ('Cadastre uma carga antes de pedir a nota.')}</form><h2>Pedidos</h2>${D.notas.map(n=>`<div class="cd"><div class="lh"><b>Nota da carga #${E(n.carga)}</b>${BD(n.status)}</div><div>${E(n.cliente)} · ${lb(n.produto)} · ${kg(n.peso)} t</div><small>${dt(n.criado)} · pedido por ${E(n.usuario)}</small>${U.perfil==='ADMIN'&&n.status==='PENDENTE'?`<div class="ac"><button data-s="notas/${n.id}/EMITIDA">Marcar como emitida</button><button class="cl" data-s="notas/${n.id}/CANCELADA">Cancelar</button></div>`:''}</div>`).join('')||VZ('Nenhum pedido de nota.')}`};
+B.notas=()=>{$('#f').onsubmit=env('notas',fm=>{const o=fm.carga.selectedOptions[0];return{produto:o.dataset.p,peso:o.dataset.w}});BS()};
+V.check=()=>`<h1>Checklist de saída</h1><form class="cd" id="f">${I('placa','Placa do caminhão',PL)}${I('carreta','Placa da carreta',PL)}${I('motorista','Motorista')}${VZ('Marque cada item que está conforme. Item sem marca reprova o checklist.')}<h2>Caminhão</h2>${IT.slice(0,6).map(CK).join('')}<h2>Carreta de piso móvel</h2>${IT.slice(6).map(CK).join('')}<label>Observações<textarea name="obs" maxlength="200" rows="2"></textarea></label><button class="am">Enviar checklist</button></form><h2>Últimos checklists</h2>${D.checklists.map(c=>`<div class="cd"><div class="lh"><b>${E(c.placa)} + ${E(c.carreta)}</b>${BD(c.status)}</div><div>${E(c.motorista)}</div>${[...c.itens].map((v,i)=>v==='0'?`<div class="pb">Problema: ${IT[i]}</div>`:'').join('')}<small>${dt(c.criado)}</small></div>`).join('')||VZ('Nenhum checklist enviado.')}`;
+B.check=()=>{$('#f').onsubmit=env('checklists',fm=>({itens:[...fm.querySelectorAll('.it')].map(c=>c.checked?1:0).join('')}))};
+V.ponto=()=>{const me=D.pontos.find(p=>p.usuario===U.nome),ok=NP[me?me.tipo:''];
+ return `<h1>Registro de ponto</h1><div class="cd"><div class="n" id="rel"></div><small>O horário gravado é o do servidor, no momento do toque.</small><div class="gr bp">${['ENTRADA','INI_INTERVALO','FIM_INTERVALO','SAIDA'].map(k=>`<button class="${ok.includes(k)?'am':''}" data-p="${k}" ${ok.includes(k)?'':'disabled'}>${lb(k)}</button>`).join('')}</div></div><h2>Registros recentes</h2>${D.pontos.slice(0,30).map(p=>`<div class="cd lh"><b>${lb(p.tipo)}</b><span>${U.perfil==='ADMIN'?E(p.usuario)+' · ':''}${dt(p.criado)}</span></div>`).join('')||VZ('Nenhum registro ainda.')}`};
+B.ponto=()=>document.querySelectorAll('[data-p]').forEach(b=>b.onclick=async()=>{try{await api('pontos',{tipo:b.dataset.p});msg('Ponto registrado: '+lb(b.dataset.p)+'.');ir(T)}catch(e){msg(e.message,1)}});
+setInterval(()=>{const r=$('#rel');if(r)r.textContent=new Date().toLocaleTimeString('pt-BR')},1000);
+inicio();
+</script><script>new MutationObserver(()=>{const f=document.querySelector('form.lgc');if(!f||f.querySelector('.dm'))return;f.insertAdjacentHTML('beforeend','<div class="ac dm"><button type="button" data-u="admin">Entrar como administrador</button><button type="button" class="cl" data-u="motorista">Entrar como motorista</button></div>');f.querySelectorAll('.dm button').forEach(b=>b.onclick=()=>{const a=b.dataset.u==='admin';f.u.value=a?'admin':'motorista';f.s.value=a?'Admin@2026':'Motor@2026';f.requestSubmit?f.requestSubmit():f.dispatchEvent(new Event('submit',{cancelable:true}))})}).observe(document.body,{childList:true,subtree:true});</script></body></html>

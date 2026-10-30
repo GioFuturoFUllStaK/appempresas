@@ -1,0 +1,7 @@
+dados.tsv
+jv.tmp
+*.class
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
